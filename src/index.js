@@ -1,4 +1,4 @@
-//const axios = require("axios").default;
+const axios = require("axios").default;
 
 // SET TIME
 let now = new Date();
@@ -11,12 +11,12 @@ let dayNames = [
   "Wednesday",
   "Thursday",
   "Friday",
-  "Saturday",
+  "Saturday"
 ];
 
 let dayName = dayNames[now.getDay()];
 
-let span = document.querySelector("#showTime");
+var span = document.querySelector("#showTime");
 
 if (min < 10) {
   min = `0${min}`;
@@ -32,34 +32,33 @@ if (min < 10) {
 // CITY NAME
 
 // SET CITY NAME FROM SEARCH BAR INPUT
-function setCityNameAction(event) {
-  event.preventDefault();
-  let input = document.querySelector("#searchbar");
-  cityUpper = input.value.toLocaleUpperCase();
-  document.getElementById("cityName").innerHTML = `${cityUpper}`;
-  // SET TEMP
- // setTemp(cityLower);
-}
+//function setCityNameAction(event) {
+// event.preventDefault();
+// let input = document.querySelector("#searchbar");
+// var cityUpper = input.value.toLocaleUpperCase();
+//  document.getElementById("cityName").innerHTML = `${cityUpper}`;
+//}
+
 let form = document.querySelector("form");
-form.addEventListener("submit", setCityNameAction);
+//form.addEventListener("submit", setCityNameAction);
 form.addEventListener("submit", getITemp);
 
 // SET CITY NAME FROM CURRENT LOCATION BUTTON
 // IGNORE ERROR 'REQUIRE IS NOT DEFINED'
-location_button = document.querySelector("#location_button");
+var location_button = document.querySelector("#location_button");
 location_button.addEventListener("click", getCityNameAction);
 location_button.addEventListener("click", getLTemp);
 
 function getCityNameAction(event) {
-  navigator.geolocation.getCurrentPosition(showPosition);
   event.preventDefault();
+  navigator.geolocation.getCurrentPosition(showPosition);
+  document.getElementById("searchbar").value = "";
 }
-
 
 function showCurrentLocation(response) {
   let myCity = document.querySelector("#cityName");
-  myCity.innerHTML = response.data[0].name;
-  console.log("You changed the city name to current location.")
+  //myCity.innerHTML = response.data[0].name;
+  myCity.innerHTML = `${response.data.name}`;
 }
 
 function showPosition(position) {
@@ -77,8 +76,12 @@ function getLTemp(event) {
 }
 
 function showTemperature(response) {
-  document.getElementById("fTemp").innerHTML = Math.round(response.data.main.temp) + "°f";
-  document.getElementById("cTemp").innerHTML = Math.round((response.data.main.temp - 32) / 1.8) + "°c";
+  document.getElementById("fTemp").innerHTML =
+    Math.round(response.data.main.temp) + "°f";
+  document.getElementById("cTemp").innerHTML =
+    Math.round((response.data.main.temp - 32) / 1.8) + "°c";
+
+  document.getElementById("cityName").innerHTML = `${response.data.name}`;
 }
 
 function getWeatherFromLocation(position) {
@@ -97,7 +100,7 @@ function getITemp(event) {
   let apiKey = "af299e40c9c7667df5a6bc3d09004719";
   let units = "imperial";
   let city = document.querySelector("#searchbar");
-  cityLower = city.value.toLocaleLowerCase();
+  var cityLower = city.value.toLocaleLowerCase();
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityLower}&appid=${apiKey}&units=${units}`;
   axios.get(`${apiUrl}`).then(showTemperature);
 }
